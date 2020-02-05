@@ -11,7 +11,7 @@ export var trail_length = 25
 
 onready var trail = $Trail/Points
 
-signal landed
+signal captured
 
 var velocity = Vector2(100, 0)  # start value for testing
 var target = null  # if we're on a circle
@@ -21,6 +21,7 @@ func _unhandled_input(event):
 		jump()
 		
 func jump():
+	target.implode()
 	target = null
 	velocity = transform.x * jump_speed
 
@@ -28,7 +29,7 @@ func _on_Jumper_area_entered(area):
 	target = area	
 	velocity = Vector2.ZERO
 	target.get_node(\"Pivot\").rotation = (position - target.position).angle()
-	emit_signal(\"landed\", area)
+	emit_signal(\"captured\", area)
 
 func _physics_process(delta):
 	if target:
