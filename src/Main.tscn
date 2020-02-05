@@ -21,15 +21,17 @@ func new_game():
 	spawn_circle($StartPosition.position)
 	
 func spawn_circle(_position=null):
+	print(\"Position: \" + str(_position))
 	var c = Circle.instance()
 	if !_position:
 		var x = rand_range(-150, 150)
 		var y = rand_range(-500, -400)
-		c.position = player.target.position + Vector2(x, y)
+		_position = player.target.position + Vector2(x, y)
 	add_child(c)
 	c.init(_position, 100)
 
 func _on_Jumper_captured(object):
+	print(\"Jumper captured\")
 	$Camera2D.position = object.position
 	call_deferred(\"spawn_circle\")
 "
@@ -38,7 +40,7 @@ func _on_Jumper_captured(object):
 script = SubResource( 1 )
 
 [node name="StartPosition" type="Position2D" parent="."]
-position = Vector2( 500, 500 )
+position = Vector2( 224, 704 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2( 0, -200 )
