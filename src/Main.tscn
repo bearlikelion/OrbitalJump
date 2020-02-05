@@ -1,12 +1,45 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://src/Jumper.tscn" type="PackedScene" id=1]
-[ext_resource path="res://src/Circle.tscn" type="PackedScene" id=2]
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
 
-[node name="Node2D" type="Node2D"]
+var Circle = preload(\"res://src/Objects/Circle.tscn\")
+var Jumper = preload(\"res://src/Objects/Jumper.tscn\")
 
-[node name="Jumper" parent="." instance=ExtResource( 1 )]
-position = Vector2( 127.236, 274.921 )
+var player
 
-[node name="Circle" parent="." instance=ExtResource( 2 )]
-position = Vector2( 458.959, 270.377 )
+func _ready():
+	randomize()
+	new_game()
+	
+func new_game():
+	$Camera2D.position = $StartPosition.position
+	player = Jumper.instance()
+	player.position = $StartPosition.position
+	add_child(player)
+	player.connect(\"captured\", self, \"_on_Jumper_captured\")
+	spawn_circle($StartPosition.position)
+	
+func spawn_circle(_position=null):
+	var c = Circle.instance()
+	if !_position:
+		var x = rand_range(-150, 150)
+		var y = rand_range(-500, -400)
+		c.position = player.target.position + Vector2(x, y)
+	add_child(c)
+	c.init(_position, 100)
+
+func _on_Jumper_captured(object):
+	$Camera2D.position = object.position
+	call_deferred(\"spawn_circle\")
+"
+
+[node name="Main" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="StartPosition" type="Position2D" parent="."]
+position = Vector2( 500, 500 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 0, -200 )
+current = true
