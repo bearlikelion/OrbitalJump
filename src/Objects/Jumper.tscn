@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/images/jumper.png" type="Texture" id=1]
 [ext_resource path="res://src/color.shader" type="Shader" id=2]
@@ -7,8 +7,11 @@
 script/source = "extends Area2D
 
 export var jump_speed = 1000
+export var trail_length = 25
 
-signal captured
+onready var trail = $Trail/Points
+
+signal landed
 
 var velocity = Vector2(100, 0)  # start value for testing
 var target = null  # if we're on a circle
@@ -22,20 +25,29 @@ func jump():
 	velocity = transform.x * jump_speed
 
 func _on_Jumper_area_entered(area):
-	target = area
+	target = area	
 	velocity = Vector2.ZERO
-	emit_signal(\"captured\", area)
+	target.get_node(\"Pivot\").rotation = (position - target.position).angle()
+	emit_signal(\"landed\", area)
 
 func _physics_process(delta):
 	if target:
 		transform = target.orbit_position.global_transform
 	else:
 		position += velocity * delta
+		
+	if trail.points.size() > trail_length:
+		trail.remove_point(0)
+	trail.add_point(position)
 "
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 2 )
-shader_param/color = Color( 0.266667, 1, 0, 1 )
+shader_param/color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0, 0.91411, 0.98773, 1 )
+colors = PoolColorArray( 0, 0, 0, 0, 0.91411, 0.91411, 0.91411, 0.91411, 1, 0, 0, 1, 1, 1, 1, 1 )
 
 [node name="Jumper" type="Area2D"]
 script = SubResource( 1 )
@@ -50,4 +62,9 @@ visible = false
 polygon = PoolVector2Array( -20.6669, -21.422, 19.8599, -0.307159, -21.0075, 21.4888 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+
+[node name="Trail" type="Node" parent="."]
+
+[node name="Points" type="Line2D" parent="Trail"]
+gradient = SubResource( 3 )
 [connection signal="area_entered" from="." to="." method="_on_Jumper_area_entered"]

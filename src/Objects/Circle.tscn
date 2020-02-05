@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/images/circle1_n.png" type="Texture" id=1]
 [ext_resource path="res://src/color.shader" type="Shader" id=2]
@@ -7,11 +7,12 @@
 script/source = "extends Area2D
 
 onready var orbit_position = $Pivot/OrbitPosition
+
 var radius = 100
 var rotation_speed = PI
 
 func _ready():
-	# init()
+	# init()	
 	pass
 
 func init(_position, _radius=radius):
@@ -22,17 +23,46 @@ func init(_position, _radius=radius):
 	var img_size = $Sprite.texture.get_size().x / 2
 	$Sprite.scale = Vector2(1, 1) * radius / img_size
 	orbit_position.position.x = radius + 25
+	rotation_speed *= pow(-1, randi() % 2)
 
-func _process(delta):
+func _process(delta):	
 	$Pivot.rotation += rotation_speed * delta
 "
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 2 )
-shader_param/color = Color( 0.945098, 1, 0, 1 )
+shader_param/color = Color( 0, 1, 0, 1 )
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 100.0
+
+[sub_resource type="Animation" id=4]
+resource_name = "implode"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.1, 0.1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
 
 [node name="Circle" type="Area2D"]
 script = SubResource( 1 )
@@ -47,3 +77,6 @@ shape = SubResource( 3 )
 [node name="Pivot" type="Node2D" parent="."]
 
 [node name="OrbitPosition" type="Position2D" parent="Pivot"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/implode = SubResource( 4 )
