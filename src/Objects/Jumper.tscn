@@ -12,6 +12,7 @@ export var trail_length = 25
 onready var trail = $Trail/Points
 
 signal captured
+signal died
 
 var velocity = Vector2(100, 0)  # start value for testing
 var target = null  # if we're on a circle
@@ -44,6 +45,7 @@ func _physics_process(delta):
 func die():
 	print(\"Player died\")
 	target = null
+	emit_signal(\"died\")
 	queue_free()
 
 func _on_VisibilityNotifier2D_screen_exited():
