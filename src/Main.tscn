@@ -49,7 +49,6 @@ script = SubResource( 1 )
 position = Vector2( 224, 704 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2( 0, -300 )
 current = true
 smoothing_enabled = true
 smoothing_speed = 3.0
@@ -57,6 +56,7 @@ smoothing_speed = 3.0
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="Camera2D/ParallaxBackground"]
+visible = false
 motion_scale = Vector2( 0.5, 0.5 )
 
 [node name="Background" type="Sprite" parent="Camera2D/ParallaxBackground/ParallaxLayer"]
