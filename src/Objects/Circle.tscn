@@ -21,58 +21,58 @@ var orbit_start = null
 var jumper = null
 
 func _ready():
-    # init()	
-    pass
+	# init()	
+	pass
 
 func init(_position, _radius=radius, _mode=MODES.STATIC):
-    set_mode(_mode)
-    position = _position
-    radius = _radius
-    $CollisionShape2D.shape = $CollisionShape2D.shape.duplicate()
-    $CollisionShape2D.shape.radius = radius
-    var img_size = $Sprite.texture.get_size().x / 2
-    $Sprite.scale = Vector2(1, 1) * radius / img_size
-    orbit_position.position.x = radius + 25
-    rotation_speed *= pow(-1, randi() % 2)
+	set_mode(_mode)
+	position = _position
+	radius = _radius
+	$CollisionShape2D.shape = $CollisionShape2D.shape.duplicate()
+	$CollisionShape2D.shape.radius = radius
+	var img_size = $Sprite.texture.get_size().x / 2
+	$Sprite.scale = Vector2(1, 1) * radius / img_size
+	orbit_position.position.x = radius + 25
+	rotation_speed *= pow(-1, randi() % 2)
 
 func _process(delta):	
-    $Pivot.rotation += rotation_speed * delta
-    if mode == MODES.LIMITED and jumper:        
-        check_orbits()
+	$Pivot.rotation += rotation_speed * delta
+	if mode == MODES.LIMITED and jumper:        
+		check_orbits()
 
 func capture(target):    
-    jumper = target
-    $AnimationPlayer.play(\"capture\")
-    $Pivot.rotation = (jumper.position - position).angle()
-    orbit_start = $Pivot.rotation
-    
+	jumper = target
+	$AnimationPlayer.play(\"capture\")
+	$Pivot.rotation = (jumper.position - position).angle()
+	orbit_start = $Pivot.rotation
+	
 func implode():
-    if !$AnimationPlayer.is_playing():
-        $AnimationPlayer.play(\"implode\")
-    yield($AnimationPlayer, \"animation_finished\")
-    queue_free()
+	if !$AnimationPlayer.is_playing():
+		$AnimationPlayer.play(\"implode\")
+	yield($AnimationPlayer, \"animation_finished\")
+	queue_free()
 
 func set_mode(_mode):
-    mode = _mode
-    match mode:
-        MODES.STATIC:
-            $Label.hide()
-        MODES.LIMITED:
-            current_orbits = num_orbits
-            $Label.text = str(current_orbits)
-            $Label.show()
+	mode = _mode
+	match mode:
+		MODES.STATIC:
+			$Label.hide()
+		MODES.LIMITED:
+			current_orbits = num_orbits
+			$Label.text = str(current_orbits)
+			$Label.show()
 
 func check_orbits():
-    # Check if the jumper completed a full circle
-    if abs($Pivot.rotation - orbit_start) > 2 * PI:
-        current_orbits -= 1
-        $Label.text = str(current_orbits)        
-        if current_orbits <= 0:
-            jumper.die()
-            jumper = null
-            implode()
-        orbit_start = $Pivot.rotation
-        
+	# Check if the jumper completed a full circle
+	if abs($Pivot.rotation - orbit_start) > 2 * PI:
+		current_orbits -= 1
+		$Label.text = str(current_orbits)        
+		if current_orbits <= 0:
+			jumper.die()
+			jumper = null
+			implode()
+		orbit_start = $Pivot.rotation
+		
 "
 
 [sub_resource type="ShaderMaterial" id=2]

@@ -22,7 +22,7 @@ func _unhandled_input(event):
 		
 func jump():
 	target.implode()
-	target = null
+	target = null	
 	velocity = transform.x * jump_speed
 
 func _on_Jumper_area_entered(area):
@@ -34,15 +34,15 @@ func _on_Jumper_area_entered(area):
 func _physics_process(delta):
 	if target:
 		transform = target.orbit_position.global_transform
+		trail.clear_points()
 	else:
 		position += velocity * delta
-
-	# if target == $_NULL:		
 		if trail.points.size() > trail_length:
-			trail.remove_point(0)
-			trail.aad_point(position)
+			trail.remove_point(0)		
+		trail.add_point(position)
 
 func die():
+	print(\"Player died\")
 	target = null
 	queue_free()
 
