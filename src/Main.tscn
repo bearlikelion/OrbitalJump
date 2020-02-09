@@ -46,19 +46,20 @@ func _on_Jumper_captured(object):
 script = SubResource( 1 )
 
 [node name="StartPosition" type="Position2D" parent="."]
-position = Vector2( 224, 704 )
+position = Vector2( 240, 728 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="Background" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 224, -5280 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 1536, 12288 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2( 0, -300 )
 current = true
 smoothing_enabled = true
 smoothing_speed = 3.0
-
-[node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]
-
-[node name="ParallaxLayer" type="ParallaxLayer" parent="Camera2D/ParallaxBackground"]
-visible = false
-motion_scale = Vector2( 0.5, 0.5 )
-
-[node name="Background" type="Sprite" parent="Camera2D/ParallaxBackground/ParallaxLayer"]
-texture = ExtResource( 1 )
