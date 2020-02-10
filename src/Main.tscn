@@ -11,35 +11,35 @@ var Jumper = preload(\"res://src/Objects/Jumper.tscn\")
 var player
 
 func _ready():
-    randomize()
-    new_game()
-    
+	randomize()
+	new_game()
+	
 func new_game():
-    for circle in get_tree().get_nodes_in_group(\"circle\"):
-        circle.queue_free()
-    
-    $Camera2D.position = $StartPosition.position
-    player = Jumper.instance()
-    player.position = $StartPosition.position
-    add_child(player)
-    player.connect(\"captured\", self, \"_on_Jumper_captured\")
-    player.connect(\"died\", self, \"new_game\")
-    spawn_circle($StartPosition.position)
-    
+	for circle in get_tree().get_nodes_in_group(\"circle\"):
+		circle.queue_free()
+	
+	$Camera2D.position = $StartPosition.position
+	player = Jumper.instance()
+	player.position = $StartPosition.position
+	add_child(player)
+	player.connect(\"captured\", self, \"_on_Jumper_captured\")
+	player.connect(\"died\", self, \"new_game\")
+	spawn_circle($StartPosition.position)
+	
 func spawn_circle(_position=null):	
-    var c = Circle.instance()	
-    # TODO: Better random range
-    if !_position:
-        var x = rand_range(-150, 150)
-        var y = rand_range(-500, -400)
-        _position = player.target.position + Vector2(x, y)		
-    add_child(c)
-    c.init(_position)
+	var c = Circle.instance()	
+	# TODO: Better random range
+	if !_position:
+		var x = rand_range(-150, 150)
+		var y = rand_range(-500, -400)
+		_position = player.target.position + Vector2(x, y)		
+	add_child(c)
+	c.init(_position)
 
 func _on_Jumper_captured(object):
-    $Camera2D.position = object.position
-    object.capture(player)
-    call_deferred(\"spawn_circle\")
+	$Camera2D.position = object.position
+	object.capture(player)
+	call_deferred(\"spawn_circle\")
 "
 
 [node name="Main" type="Node2D"]
@@ -51,12 +51,17 @@ position = Vector2( 240, 728 )
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+z_index = -100
 
-[node name="Background" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
-position = Vector2( 224, -5280 )
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
 texture = ExtResource( 1 )
-region_enabled = true
-region_rect = Rect2( 0, 0, 1536, 12288 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2( 0, -300 )
