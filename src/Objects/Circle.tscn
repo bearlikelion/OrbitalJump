@@ -84,7 +84,7 @@ tracks/1/keys = {
 }
 
 [node name="Circle" type="Area2D" groups=[
-"circle",
+"circles",
 ]]
 script = ExtResource( 4 )
 

@@ -23,6 +23,8 @@ func _on_button_pressed(name):
             emit_signal("start_game")
         "Settings":
             change_screen($Settings)
+        "Back":
+            change_screen($TitleScreen)
             
             
 func change_screen(new_screen):

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/images/space.jpg" type="Texture" id=1]
 [ext_resource path="res://src/FPSCounter.gd" type="Script" id=2]
+[ext_resource path="res://src/UI/Menus.tscn" type="PackedScene" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -13,7 +14,8 @@ var player
 
 func _ready():
     randomize()
-    new_game()
+    # new_game()
+
     
 func new_game():
     for circle in get_tree().get_nodes_in_group(\"circle\"):
@@ -24,8 +26,9 @@ func new_game():
     player.position = $StartPosition.position
     add_child(player)
     player.connect(\"captured\", self, \"_on_Jumper_captured\")
-    player.connect(\"died\", self, \"new_game\")
+    player.connect(\"died\", self, \"_on_Jumper_died\")
     spawn_circle($StartPosition.position)
+
     
 func spawn_circle(_position=null):	
     var c = Circle.instance()	
@@ -37,27 +40,33 @@ func spawn_circle(_position=null):
     add_child(c)
     c.init(_position)
 
+
 func _on_Jumper_captured(object):
     $Camera2D.position = object.position
     object.capture(player)
     call_deferred(\"spawn_circle\")
+    
+
+func _on_Jumper_died():
+    get_tree().call_group(\"circles\", \"implode\")
+    $Menus.game_over()
 "
 
 [node name="Main" type="Node2D"]
 script = SubResource( 1 )
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="FPS Counter" type="CanvasLayer" parent="."]
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 20.0
-margin_bottom = 20.0
+[node name="MarginContainer" type="MarginContainer" parent="FPS Counter"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 15.0
+margin_bottom = 15.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CanvasLayer/MarginContainer"]
+[node name="Label" type="Label" parent="FPS Counter/MarginContainer"]
 margin_right = 27.0
 margin_bottom = 14.0
 text = "fps: "
@@ -65,6 +74,8 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Menus" parent="." instance=ExtResource( 3 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 240, 728 )
@@ -94,3 +105,4 @@ stretch_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="start_game" from="Menus" to="." method="new_game"]
