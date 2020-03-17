@@ -4,7 +4,7 @@
 [ext_resource path="res://assets/images/buttons/gear.png" type="Texture" id=3]
 [ext_resource path="res://assets/images/buttons/right.png" type="Texture" id=4]
 
-[node name="Title" instance=ExtResource( 1 )]
+[node name="TitleScreen" instance=ExtResource( 1 )]
 
 [node name="Label" parent="MarginContainer/VBoxContainer" index="0"]
 margin_bottom = 78.0
@@ -26,6 +26,5 @@ margin_right = 357.0
 margin_bottom = 100.0
 texture_normal = ExtResource( 3 )
 
-[node name="Buttons2" parent="MarginContainer/VBoxContainer" index="2"]
+[node name="VBoxContainer" parent="MarginContainer/VBoxContainer" index="2"]
 margin_top = 478.0
-margin_bottom = 478.0
