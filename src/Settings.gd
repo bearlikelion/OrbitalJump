@@ -32,4 +32,5 @@ var color_schemes = {
     }
 }
 
-var theme = color_schemes["NEON1"]
+var themes = color_schemes.values()
+var theme = themes[randi() % themes.size()]

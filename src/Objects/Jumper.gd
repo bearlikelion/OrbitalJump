@@ -11,9 +11,15 @@ signal died
 var velocity = Vector2(250, 0)  # start value for testing
 var target = null  # if we're on a circle
 
+func _ready():
+    $Sprite.material.set_shader_param("color", Settings.theme['player_body'])
+    $Trail/Points.default_color = Settings.theme['player_trail']
+
+
 func _unhandled_input(event):
     if target and event is InputEventScreenTouch and event.pressed:
         jump()
+        
         
 func jump():
     target.implode()
@@ -48,6 +54,7 @@ func die():
     target = null
     emit_signal("died")
     queue_free()
+
 
 func _on_VisibilityNotifier2D_screen_exited():
     if !target:

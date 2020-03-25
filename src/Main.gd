@@ -4,7 +4,9 @@ var Circle = preload("res://src/Objects/Circle.tscn")
 var Jumper = preload("res://src/Objects/Jumper.tscn")
 
 var player
-var score
+var score = 0 setget set_score
+var level = 0
+onready var starting_score_per_level = Settings.circles_per_level
 
 func _ready():
     randomize()
@@ -20,7 +22,9 @@ func new_game():
             
     $Camera2D.position = $StartPosition.position
     
-    score = -10
+    level = 1
+    self.score = -1    
+    Settings.circles_per_level = starting_score_per_level
     
     player = Jumper.instance()
     player.position = $StartPosition.position
@@ -47,11 +51,21 @@ func spawn_circle(_position=null):
 
 func _on_Jumper_captured(object):
     $Camera2D.position = object.position
-    object.capture(player)
-    score += 10
+    call_deferred("spawn_circle")    
     $HUD.update_score(score)
-    call_deferred("spawn_circle")
-    
+    object.capture(player)
+    self.score += 1    
+        
+
+func set_score(value):
+    score = value
+    $HUD.update_score(score)
+    if score > 0 and score % Settings.circles_per_level == 0:
+        level += 1 
+        Settings.circles_per_level = int(round(Settings.circles_per_level * 1.5))
+        print("Cirlces per: " + str(Settings.circles_per_level))
+        $HUD.show_message("Level %s" % str(level))
+
 
 func _on_Jumper_died():
     get_tree().call_group("circles", "implode")
