@@ -17,7 +17,8 @@ func _ready():
     # init()	
     pass
 
-func init(_position, _radius=radius, _mode=MODES.LIMITED):
+
+func init(_position, _radius=radius, _mode=false):
     set_mode(_mode)
     position = _position
     radius = _radius
@@ -27,12 +28,14 @@ func init(_position, _radius=radius, _mode=MODES.LIMITED):
     $Sprite.scale = Vector2(1, 1) * radius / img_size
     orbit_position.position.x = radius + 25
     rotation_speed *= pow(-1, randi() % 2)
+        
 
 func _process(delta):	
     $Pivot.rotation += rotation_speed * delta
     if mode == MODES.LIMITED and jumper:        
         check_orbits()        
         update()
+    
         
 func _draw():
     if jumper:
@@ -45,14 +48,18 @@ func capture(target):
     $AnimationPlayer.play("capture")
     $Pivot.rotation = (jumper.position - position).angle()
     orbit_start = $Pivot.rotation
-    
+   
+ 
 func implode():
     if !$AnimationPlayer.is_playing():
         $AnimationPlayer.play("implode")
     yield($AnimationPlayer, "animation_finished")
     queue_free()
 
+
 func set_mode(_mode):
+    if _mode == false:        
+        _mode = MODES.values()[randi() % MODES.size()]
     mode = _mode
     match mode:
         MODES.STATIC:
@@ -62,16 +69,21 @@ func set_mode(_mode):
             $Label.text = str(current_orbits)
             $Label.show()
 
+
 func check_orbits():
     # Check if the jumper completed a full circle
     if abs($Pivot.rotation - orbit_start) > 2 * PI:
         current_orbits -= 1
+        
+        if Settings.enable_sound:
+            $Beep.play()
+        
         $Label.text = str(current_orbits)        
         if current_orbits <= 0:
-            jumper.die()
-            jumper = null
+            jumper.die()            
             implode()
         orbit_start = $Pivot.rotation
+        
         
 func draw_circle_arc_poly(center, _radius, angle_from, angle_to, color):
     var nb_points = 32

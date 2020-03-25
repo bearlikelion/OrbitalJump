@@ -1,88 +1,22 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/images/space.jpg" type="Texture" id=1]
-[ext_resource path="res://src/FPSCounter.gd" type="Script" id=2]
-[ext_resource path="res://src/UI/Menus.tscn" type="PackedScene" id=3]
-
-[sub_resource type="GDScript" id=1]
-script/source = "extends Node2D
-
-var Circle = preload(\"res://src/Objects/Circle.tscn\")
-var Jumper = preload(\"res://src/Objects/Jumper.tscn\")
-
-var player
-
-func _ready():
-    randomize()
-    # new_game()
-
-    
-func new_game():
-    for circle in get_tree().get_nodes_in_group(\"circle\"):
-        circle.queue_free()
-    
-    $Camera2D.position = $StartPosition.position
-    player = Jumper.instance()
-    player.position = $StartPosition.position
-    add_child(player)
-    player.connect(\"captured\", self, \"_on_Jumper_captured\")
-    player.connect(\"died\", self, \"_on_Jumper_died\")
-    spawn_circle($StartPosition.position)
-
-    
-func spawn_circle(_position=null):	
-    var c = Circle.instance()	
-    # TODO: Better random range
-    if !_position:
-        var x = rand_range(-150, 150)
-        var y = rand_range(-500, -400)
-        _position = player.target.position + Vector2(x, y)		
-    add_child(c)
-    c.init(_position)
-
-
-func _on_Jumper_captured(object):
-    $Camera2D.position = object.position
-    object.capture(player)
-    call_deferred(\"spawn_circle\")
-    
-
-func _on_Jumper_died():
-    get_tree().call_group(\"circles\", \"implode\")
-    $Menus.game_over()
-"
+[ext_resource path="res://src/UI/Screens.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/UI/HUD.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/audio/Music_Light-Puzzles.ogg" type="AudioStream" id=5]
+[ext_resource path="res://src/Main.gd" type="Script" id=6]
 
 [node name="Main" type="Node2D"]
-script = SubResource( 1 )
+script = ExtResource( 6 )
 
-[node name="FPS Counter" type="CanvasLayer" parent="."]
+[node name="HUD" parent="." instance=ExtResource( 4 )]
 
-[node name="MarginContainer" type="MarginContainer" parent="FPS Counter"]
-margin_left = 15.0
-margin_top = 15.0
-margin_right = 15.0
-margin_bottom = 15.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="FPS Counter/MarginContainer"]
-margin_right = 27.0
-margin_bottom = 14.0
-text = "fps: "
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Menus" parent="." instance=ExtResource( 3 )]
+[node name="Screens" parent="." instance=ExtResource( 3 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 240, 728 )
 offset = Vector2( 0, -300 )
 current = true
 smoothing_enabled = true
-smoothing_speed = 3.0
 drag_margin_left = 0.0
 drag_margin_top = 0.0
 drag_margin_right = 0.0
@@ -91,18 +25,6 @@ drag_margin_bottom = 0.0
 [node name="StartPosition" type="Position2D" parent="."]
 position = Vector2( 240, 728 )
 
-[node name="TextureRect" type="TextureRect" parent="."]
-visible = false
-margin_right = 1024.0
-margin_bottom = 1024.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture = ExtResource( 1 )
-stretch_mode = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-[connection signal="start_game" from="Menus" to="." method="new_game"]
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+[connection signal="start_game" from="Screens" to="." method="new_game"]

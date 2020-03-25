@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/FPSCounter.gd" type="Script" id=1]
+
+[node name="FPS Counter" type="CanvasLayer"]
+layer = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 15.0
+margin_bottom = 15.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="MarginContainer"]
+show_behind_parent = true
+margin_right = 27.0
+margin_bottom = 14.0
+text = "fps: "
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -8,7 +8,7 @@ onready var trail = $Trail/Points
 signal captured
 signal died
 
-var velocity = Vector2(100, 0)  # start value for testing
+var velocity = Vector2(250, 0)  # start value for testing
 var target = null  # if we're on a circle
 
 func _unhandled_input(event):
@@ -19,17 +19,24 @@ func jump():
     target.implode()
     target = null	
     velocity = transform.x * jump_speed
+    
+    if Settings.enable_sound:
+        $Jump.play()
 
 func _on_Jumper_area_entered(area):
     target = area	
-    velocity = Vector2.ZERO    
+    trail.clear_points()
+    velocity = Vector2.ZERO        
     target.get_node("Pivot").rotation = (position - target.position).angle()
     emit_signal("captured", area)
+    
+    if Settings.enable_sound:
+        $Capture.play()
+        
 
 func _physics_process(delta):
     if target:
-        transform = target.orbit_position.global_transform
-        trail.clear_points()
+        transform = target.orbit_position.global_transform        
     else:
         position += velocity * delta
         if trail.points.size() > trail_length:

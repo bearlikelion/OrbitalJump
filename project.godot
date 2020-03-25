@@ -19,6 +19,10 @@ config/name="Orbital Rise"
 run/main_scene="res://src/Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Settings="*res://src/Settings.gd"
+
 [display]
 
 window/size/width=480
