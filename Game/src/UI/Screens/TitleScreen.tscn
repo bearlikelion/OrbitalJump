@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/images/buttons/gear.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/buttons/right.png" type="Texture" id=2]
+[ext_resource path="res://src/UI/Screens/BaseScreen.tscn" type="PackedScene" id=3]
+
+[node name="TitleScreen" instance=ExtResource( 3 )]
+
+[node name="Title" parent="MarginContainer/VBoxContainer" index="0"]
+text = "Orbital Rise"
+
+[node name="Play" type="TextureButton" parent="MarginContainer/VBoxContainer/Buttons" index="0" groups=[
+"buttons",
+]]
+margin_left = 82.0
+margin_top = 35.0
+margin_right = 182.0
+margin_bottom = 135.0
+size_flags_vertical = 4
+texture_normal = ExtResource( 2 )
+
+[node name="Settings" type="TextureButton" parent="MarginContainer/VBoxContainer/Buttons" index="1" groups=[
+"buttons",
+]]
+margin_left = 257.0
+margin_top = 35.0
+margin_right = 357.0
+margin_bottom = 135.0
+size_flags_vertical = 4
+texture_normal = ExtResource( 1 )

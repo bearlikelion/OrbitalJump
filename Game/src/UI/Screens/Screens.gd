@@ -55,6 +55,7 @@ func change_screen(new_screen):
         current_screen.appear()
         yield(current_screen.tween, "tween_completed")
 
-func game_over(score):
-    $GameOver/MarginContainer/VBoxContainer/BottomButtons/Score.text = "Score: " + str(score)
+func game_over(score, level):    
     change_screen($GameOver)
+    $GameOver/MarginContainer/VBoxContainer/BottomButtons/FinalScore/Level.text = "Level: %s" % level    
+    $GameOver/MarginContainer/VBoxContainer/BottomButtons/FinalScore/Score.text = "Score: %s" % score

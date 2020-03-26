@@ -5,6 +5,7 @@ func show_message(text):
     $Message.text = text
     $Message/AnimationPlayer.play("show_message")
 
+
 func hide():
     $ScoreBox.hide()
 

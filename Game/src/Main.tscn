@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://src/UI/Screens.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/UI/Screens/Screens.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/UI/HUD.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/audio/Music_Light-Puzzles.ogg" type="AudioStream" id=5]
 [ext_resource path="res://src/Main.gd" type="Script" id=6]
