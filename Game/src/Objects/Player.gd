@@ -12,6 +12,10 @@ var velocity = Vector2(250, 0)  # start value for testing
 var target = null  # if we're on a circle
 
 func _ready():
+    change_theme()
+
+
+func change_theme():
     $Sprite.material.set_shader_param("color", Settings.theme['player_body'])
     $Trail/Points.default_color = Settings.theme['player_trail']
 

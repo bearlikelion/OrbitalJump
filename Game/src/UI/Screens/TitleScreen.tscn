@@ -13,9 +13,9 @@ text = "Orbital Rise"
 "buttons",
 ]]
 margin_left = 82.0
-margin_top = 35.0
+margin_top = 59.0
 margin_right = 182.0
-margin_bottom = 135.0
+margin_bottom = 159.0
 size_flags_vertical = 4
 texture_normal = ExtResource( 2 )
 
@@ -23,8 +23,8 @@ texture_normal = ExtResource( 2 )
 "buttons",
 ]]
 margin_left = 257.0
-margin_top = 35.0
+margin_top = 59.0
 margin_right = 357.0
-margin_bottom = 135.0
+margin_bottom = 159.0
 size_flags_vertical = 4
 texture_normal = ExtResource( 1 )

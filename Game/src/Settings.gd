@@ -33,4 +33,4 @@ var color_schemes = {
 }
 
 var themes = color_schemes.values()
-var theme = themes[randi() % themes.size()]
+var theme = themes[0]

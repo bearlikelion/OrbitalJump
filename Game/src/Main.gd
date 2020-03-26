@@ -11,27 +11,39 @@ onready var starting_score_per_level = Settings.circles_per_level
 func _ready():
     $HUD.hide()
     Settings.circles_per_level = starting_score_per_level
-
+        
 
 func new_game():
     level = 1
     self.score = -1
-    $Camera2D.position = $StartPosition.position
+    $Camera2D.position = $StartPosition.position    
 
     if Settings.enable_music:
-        $Music.play()
+        $Music.play()    
 
     player = Player.instance()
     player.position = $StartPosition.position
     add_child(player)
     player.connect("captured", self, "_on_Player_captured")
     player.connect("died", self, "_on_Player_died")
+    
+    Settings.themes.resize(0)
+    change_theme()
 
     spawn_circle($StartPosition.position)
 
     $HUD.show()
     $HUD.show_message("Go!")
 
+
+func change_theme():        
+    Settings.themes.pop_front()
+    if Settings.themes.size() == 0:             
+        Settings.themes = Settings.color_schemes.values()        
+                
+    Settings.theme = Settings.themes[0]            
+    player.change_theme()        
+    
 
 func set_score(value):
     score = value
@@ -40,6 +52,8 @@ func set_score(value):
         level += 1
         Settings.circles_per_level = int(round(Settings.circles_per_level * 1.5))
         print("Cirlces per: " + str(Settings.circles_per_level))
+        
+        change_theme()
         $HUD.show_message("Level %s" % str(level))
         
 
