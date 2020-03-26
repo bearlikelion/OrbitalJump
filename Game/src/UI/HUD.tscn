@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/fonts/Xolonium.tres" type="DynamicFont" id=1]
 [ext_resource path="res://assets/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://src/UI/HUD.gd" type="Script" id=3]
-[ext_resource path="res://src/UI/Message.tres" type="DynamicFont" id=4]
+[ext_resource path="res://assets/fonts/Message.tres" type="DynamicFont" id=4]
 [ext_resource path="res://src/UI/FPS Counter.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
@@ -64,16 +64,6 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
-tracks/2/type = "bezier"
-tracks/2/path = NodePath(".:custom_fonts/font:size")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"points": PoolRealArray( 64, -0.25, 0, 0.25, 0, 200, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 1 )
-}
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 3 )
@@ -123,8 +113,6 @@ __meta__ = {
 }
 
 [node name="Message" type="Label" parent="."]
-visible = false
-modulate = Color( 1, 1, 1, 0 )
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5

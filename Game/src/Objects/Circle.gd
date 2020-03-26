@@ -15,11 +15,11 @@ var mode = MODES.STATIC
 var current_orbits = 0
 var orbit_start = null
 
-var jumper = null
+var player = null
 
 func _ready():
     $Sprite.material = $Sprite.material.duplicate()
-    $SpriteEffect.material = $Sprite.material    
+    $SpriteEffect.material = $Sprite.material
 
 
 func init(_position, _radius=radius, _mode=false):
@@ -33,38 +33,38 @@ func init(_position, _radius=radius, _mode=false):
     orbit_position.position.x = radius + 25
     rotation_speed *= pow(-1, randi() % 2)
     set_tween()
-        
 
-func _process(delta):	
+
+func _process(delta):
     $Pivot.rotation += rotation_speed * delta
-    if mode == MODES.LIMITED and jumper:        
-        check_orbits()        
+    if mode == MODES.LIMITED and player:
+        check_orbits()
         update()
-    
-        
+
+
 func _draw():
-    if jumper:
+    if player and mode == MODES.LIMITED:
         var r = ((radius - 25) / num_orbits) * (1 + num_orbits - current_orbits)
-        draw_circle_arc_poly(Vector2.ZERO, r, orbit_start + PI/2, 
-            $Pivot.rotation + PI/2, Settings.theme["circle_fill"])        
+        draw_circle_arc_poly(Vector2.ZERO, r, orbit_start + PI/2,
+            $Pivot.rotation + PI/2, Settings.theme["circle_fill"])
 
 
-func capture(target):    
-    jumper = target
+func capture(target):
+    player = target
+    move_tween.stop_all()
     $AnimationPlayer.play("capture")
-    $Pivot.rotation = (jumper.position - position).angle()
+    $Pivot.rotation = (player.position - position).angle()
     orbit_start = $Pivot.rotation
-   
- 
+
+
 func implode():
     if !$AnimationPlayer.is_playing():
         $AnimationPlayer.play("implode")
     yield($AnimationPlayer, "animation_finished")
     queue_free()
 
-
 func set_mode(_mode):
-    if _mode == false:                
+    if _mode == false:
         _mode = MODES.values()[randi() % MODES.size()]
     mode = _mode
     var color
@@ -81,20 +81,20 @@ func set_mode(_mode):
 
 
 func check_orbits():
-    # Check if the jumper completed a full circle
+    # Check if the player completed a full circle
     if abs($Pivot.rotation - orbit_start) > 2 * PI:
         current_orbits -= 1
-        
+
         if Settings.enable_sound:
             $Beep.play()
-        
-        $Label.text = str(current_orbits)        
+
+        $Label.text = str(current_orbits)
         if current_orbits <= 0:
-            jumper.die()            
+            player.die()
             implode()
         orbit_start = $Pivot.rotation
-        
-        
+
+
 func draw_circle_arc_poly(center, _radius, angle_from, angle_to, color):
     var nb_points = 32
     var points_arc = PoolVector2Array()
@@ -107,7 +107,7 @@ func draw_circle_arc_poly(center, _radius, angle_from, angle_to, color):
     draw_polygon(points_arc, colors)
 
 
-func set_tween(object=null, key=null):
+func set_tween(_object=null, _key=null):
     if move_range == 0:
         return
     move_range *= -1
